@@ -43,7 +43,7 @@ class NodeClassificationDataset(BaseDataset):
         self.num_classes = None
         self.has_feature = False
         self.multi_label = False
-        self.meta_paths_dict =None
+        self.meta_paths_dict = None
         # self.in_dim = None
 
     def get_labels(self):
@@ -89,11 +89,11 @@ class NodeClassificationDataset(BaseDataset):
         """
         if 'train_mask' not in self.g.nodes[self.category].data:
             self.logger.dataset_info("The dataset has no train mask. "
-                  "So split the category nodes randomly. And the ratio of train/test is 8:2.")
+                                     "So split the category nodes randomly. And the ratio of train/test is 8:2.")
             num_nodes = self.g.number_of_nodes(self.category)
             n_test = int(num_nodes * 0.2)
             n_train = num_nodes - n_test
-    
+
             train, test = th.utils.data.random_split(range(num_nodes), [n_train, n_test])
             train_idx = th.tensor(train.indices)
             test_idx = th.tensor(test.indices)
@@ -240,7 +240,7 @@ class HIN_NodeClassification(NodeClassificationDataset):
                                               ('subject', 'subject-paper', 'paper')],
                                     'PAP': [('paper', 'paper-author', 'author'), ('author', 'author-paper', 'paper')],
                                     'PSP': [('paper', 'paper-subject', 'subject'),
-                                              ('subject', 'subject-paper', 'paper')]
+                                            ('subject', 'subject-paper', 'paper')]
                                     }
             # self.meta_paths = [(('paper', 'paper-author', 'author'), ('author', 'author-paper', 'paper'),
             #                     ('paper', 'paper-subject', 'subject'), ('subject', 'subject-paper', 'paper'))]
@@ -277,10 +277,14 @@ class HIN_NodeClassification(NodeClassificationDataset):
             g = dataset[0].long()
             num_classes = 8
             g = add_reverse_edges(g)
-            self.meta_paths_dict = {'DCD': [('DISEASE', 'CHEMICAL-in-DISEASE-rev', 'CHEMICAL'), ('CHEMICAL', 'CHEMICAL-in-DISEASE', 'DISEASE')],
-                                    'DDD': [('DISEASE', 'DISEASE-and-DISEASE', 'DISEASE'), ('DISEASE', 'DISEASE-and-DISEASE-rev', 'DISEASE')],
-                                    'DGD': [('DISEASE', 'GENE-causing-DISEASE-rev', 'GENE'), ('GENE', 'GENE-causing-DISEASE', 'DISEASE')],
-                                    'DSD': [('DISEASE', 'SPECIES-with-DISEASE-rev', 'SPECIES'), ('SPECIES', 'SPECIES-with-DISEASE', 'DISEASE')]
+            self.meta_paths_dict = {'DCD': [('DISEASE', 'CHEMICAL-in-DISEASE-rev', 'CHEMICAL'),
+                                            ('CHEMICAL', 'CHEMICAL-in-DISEASE', 'DISEASE')],
+                                    'DDD': [('DISEASE', 'DISEASE-and-DISEASE', 'DISEASE'),
+                                            ('DISEASE', 'DISEASE-and-DISEASE-rev', 'DISEASE')],
+                                    'DGD': [('DISEASE', 'GENE-causing-DISEASE-rev', 'GENE'),
+                                            ('GENE', 'GENE-causing-DISEASE', 'DISEASE')],
+                                    'DSD': [('DISEASE', 'SPECIES-with-DISEASE-rev', 'SPECIES'),
+                                            ('SPECIES', 'SPECIES-with-DISEASE', 'DISEASE')]
                                     }
         elif name_dataset in ['acm_han', 'acm_han_raw']:
             if name_dataset == 'acm_han':
@@ -343,11 +347,13 @@ class OHGB_NodeClassification(NodeClassificationDataset):
             category = 'paper'
             num_classes = 3
             self.meta_paths_dict = {
-                                    'PAP': [('paper', 'paper-author', 'author'), ('author', 'author-paper', 'paper')],
-                                    'PSP': [('paper', 'paper-subject', 'subject'),
-                                              ('subject', 'subject-paper', 'paper')]
-                                    }
-                                    
+                'PAP': [('paper', 'paper-author', 'author'), ('author', 'author-paper', 'paper')],
+                'PSP': [('paper', 'paper-subject', 'subject'),
+                        ('subject', 'subject-paper', 'paper')],
+                'PAPSP': [('paper', 'paper-author', 'author'), ('author', 'author-paper', 'paper'),
+                          ('paper', 'paper-subject', 'subject'), ('subject', 'subject-paper', 'paper')]
+            }
+
         elif dataset_name == 'ohgbn-imdb':
             dataset = OHGBDataset(name=dataset_name, raw_dir='')
             category = 'movie'
@@ -355,10 +361,14 @@ class OHGB_NodeClassification(NodeClassificationDataset):
             num_classes = 3
             self.meta_paths_dict = {
                 'MAM': [('movie', 'movie-actor', 'actor'), ('actor', 'actor-movie', 'movie')],
-                'MDM': [('movie', 'movie-director', 'director'), ('director', 'director-movie', 'movie')]}
-            
+                'MDM': [('movie', 'movie-director', 'director'), ('director', 'director-movie', 'movie')],
+                'MAMDM': [('movie', 'movie-actor', 'actor'), ('actor', 'actor-movie', 'movie'),
+                          ('movie', 'movie-director', 'director'), ('director', 'director-movie', 'movie')]
+
+            }
+
         self.g, self.category, self.num_classes = g, category, num_classes
-    
+
 
 @register_dataset('HGBn_node_classification')
 class HGB_NodeClassification(NodeClassificationDataset):
