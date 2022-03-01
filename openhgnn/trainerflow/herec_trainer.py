@@ -84,4 +84,7 @@ class HERecTrainer(BaseFlow):
                     running_loss = running_loss * 0.9 + loss.item() * 0.1
                     if i > 0 and i % 50 == 0:
                         self.logger.train_info(' Loss: ' + str(running_loss))
+            emb = self.model.u_embeddings.weight.cpu().data.numpy()
+            metric = {'test': self.task.downstream_evaluate(logits=emb, evaluation_metric='f1_lr')}
+            self.logger.train_info(self.logger.metric2str(metric))
         self.model.save_embedding(self.embeddings_file_path)

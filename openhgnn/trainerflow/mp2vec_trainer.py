@@ -69,6 +69,10 @@ class Metapath2VecTrainer(BaseFlow):
                     running_loss = running_loss * 0.9 + loss.item() * 0.1
                     if i > 0 and i % 50 == 0:
                         self.logger.info(' Loss: ' + str(running_loss))
+            start_idx, end_idx = self.get_ntype_range(self.task.dataset.category)
+            emb = self.u_embeddings.weight.cpu().data.numpy()
+            metric = {'test': self.task.downstream_evaluate(logits=emb[start_idx:end_idx], evaluation_metric='f1_lr')}
+            self.logger.train_info(self.logger.metric2str(metric))
         self.model.save_embedding(self.embeddings_file_path)
 
     def get_ntype_range(self, target_ntype):
