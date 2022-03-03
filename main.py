@@ -18,10 +18,12 @@ if __name__ == '__main__':
     parser.add_argument('--use_best_config', action='store_true', help='will load utils.best_config')
     parser.add_argument('--use_hpo', action='store_true', help='hyper-parameter optimization')
     parser.add_argument('--load_from_pretrained', action='store_true', help='load model from the checkpoint')
+    parser.add_argument('--output_dir', type=str, help='the output directory')
     args = parser.parse_args()
 
     config_file = ["./openhgnn/config.ini"]
-    config = Config(file_path=config_file, model=args.model, dataset=args.dataset, task=args.task, gpu=args.gpu)
+    config = Config(file_path=config_file, model=args.model, dataset=args.dataset,
+                    task=args.task, gpu=args.gpu, output_dir=args.output_dir)
     config.use_best_config = args.use_best_config
     config.use_hpo = args.use_hpo
     config.load_from_pretrained = args.load_from_pretrained

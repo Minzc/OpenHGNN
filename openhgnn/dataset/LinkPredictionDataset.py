@@ -23,7 +23,7 @@ class LinkPredictionDataset(BaseDataset):
         Get subgraphs for train, valid and test.
         Generally, the original will have train_mask and test_mask in edata, or we will split it automatically.
 
-        If the original graph do not has the train_mask in edata, we default that there is no valid_mask and test_mask.
+        If the original graph do not have the train_mask in edata, we default that there is no valid_mask and test_mask.
         So we will split the edges of the original graph into train/valid/test 0.7/0.1/0.2.
 
         The dataset has not validation_mask, so we split train edges randomly.
@@ -146,6 +146,7 @@ class Test_LinkPrediction(LinkPredictionDataset):
         neg_graph = dgl.heterograph({('user', 'user-item', 'item'): neg_edge},
                                     {ntype: self.g.number_of_nodes(ntype) for ntype in ['user', 'item']})
         dgl.save_graphs('./openhgnn/debug/neg.bin', neg_graph)
+
 
 
 @register_dataset('hin_link_prediction')

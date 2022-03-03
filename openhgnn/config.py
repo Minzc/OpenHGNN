@@ -6,7 +6,7 @@ from .utils.activation import act_dict
 
 
 class Config(object):
-    def __init__(self, file_path, model, dataset, task, gpu):
+    def __init__(self, file_path, model, dataset, task, gpu, output_dir):
         conf = configparser.ConfigParser()
         data_path = os.getcwd()
         if gpu == -1:
@@ -28,7 +28,10 @@ class Config(object):
         self.task = task
         self.model = model
         self.dataset = dataset
-        self.output_dir = './openhgnn/output/{}'.format(self.model)
+        # self.output_dir = './openhgnn/output/{}'.format(self.model)
+        self.output_dir = output_dir
+        if os.path.exists(output_dir) == False:
+            os.makedirs(output_dir)
         self.optimizer = 'Adam'
         if model == "NSHE":
             self.dim_size = {}
